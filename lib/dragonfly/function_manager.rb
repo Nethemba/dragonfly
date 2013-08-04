@@ -33,7 +33,7 @@ module Dragonfly
     end
 
     def call_last(meth, *args)
-      if functions[meth.to_sym]
+      if functions_names.include?(meth)
         functions[meth.to_sym].reverse.each do |function|
           catch :unable_to_handle do
             return function.call(*args)
@@ -61,6 +61,10 @@ module Dragonfly
       methods = obj.public_methods(false).map{|m| m.to_sym }
       methods -= obj.config_methods if obj.is_a?(Configurable)
       methods
+    end
+
+    def functions_names
+      @functions_names ||= functions.keys.map(&:to_s)
     end
 
   end
